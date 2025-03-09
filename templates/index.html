@@ -43,26 +43,20 @@
         </tbody>
     </table>
 
-    <label for="delimiter">選擇分隔符號：</label>
-    <select id="delimiter">
-        <option value="\n">換行</option>
-        <option value="\t">Tab</option>
-    </select>
-
     <button onclick="copySelected()">複製選取的 ASIN</button>
     {% endif %}
 
     <script>
         function copySelected() {
             let checkboxes = document.querySelectorAll(".asin-checkbox:checked");
-            let delimiter = document.getElementById("delimiter").value;
-            let selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name).join(delimiter);
+            let selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name);
     
-            if (selectedNames) {
-                // 確保換行符號 `\n` 正確被解釋
-                let formattedText = selectedNames.replace(/\n/g, '\r\n');  // 兼容 Windows 換行格式
+            if (selectedNames.length > 0) {
+                // 確保每個 ASIN 都換行，並適配 Windows 和 Mac
+                let formattedText = selectedNames.join("\n");
+    
                 navigator.clipboard.writeText(formattedText).then(() => {
-                    alert("已複製:\n" + selectedNames);
+                    alert("已複製 ASIN：\n" + formattedText);
                 });
             } else {
                 alert("請至少選擇一個 ASIN！");
