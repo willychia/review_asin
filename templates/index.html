@@ -11,6 +11,8 @@
         th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
         th { background-color: #f4f4f4; }
         button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -29,15 +31,15 @@
             <tr>
                 <th>選擇</th>
                 <th>ASIN</th>
-                <th>Detail Page</th>
             </tr>
         </thead>
         <tbody>
             {% for asin in asin_list %}
             <tr>
                 <td><input type="checkbox" class="asin-checkbox" data-name="{{ asin }}"></td>
-                <td>{{ asin }}</td>
-                <td><a href="https://www.amazon.com/dp/{{ asin }}" target="_blank">🔗</a></td>
+                <td>
+                    <a href="https://www.amazon.com/dp/{{ asin }}" target="_blank">{{ asin }}</a>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -50,11 +52,11 @@
         function copySelected() {
             let checkboxes = document.querySelectorAll(".asin-checkbox:checked");
             let selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name);
-    
+
             if (selectedNames.length > 0) {
-                // 確保每個 ASIN 都換行，並適配 Windows 和 Mac
+                // 確保換行顯示
                 let formattedText = selectedNames.join("\n");
-    
+
                 navigator.clipboard.writeText(formattedText).then(() => {
                     alert("已複製 ASIN：\n" + formattedText);
                 });
