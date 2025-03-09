@@ -57,9 +57,11 @@
             let checkboxes = document.querySelectorAll(".asin-checkbox:checked");
             let delimiter = document.getElementById("delimiter").value;
             let selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name).join(delimiter);
-
+    
             if (selectedNames) {
-                navigator.clipboard.writeText(selectedNames).then(() => {
+                // 確保換行符號 `\n` 正確被解釋
+                let formattedText = selectedNames.replace(/\n/g, '\r\n');  // 兼容 Windows 換行格式
+                navigator.clipboard.writeText(formattedText).then(() => {
                     alert("已複製:\n" + selectedNames);
                 });
             } else {
