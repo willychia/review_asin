@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASIN 選擇器</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        textarea { width: 60%; height: 100px; margin-top: 10px; }
+        table { width: 60%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        button { padding: 10px 15px; margin-top: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h2>ASIN 選擇器</h2>
+
+    <form method="POST">
+        <label for="asin_input">請輸入 ASIN（用逗號或換行分隔）：</label><br>
+        <textarea name="asin_input" id="asin_input">{{ request.form.get('asin_input', '') }}</textarea><br>
+        <button type="submit">產生表格</button>
+    </form>
+
+    {% if asin_list %}
+    <table>
+        <thead>
+            <tr>
+                <th>選擇</th>
+                <th>ASIN</th>
+                <th>Detail Page</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for asin in asin_list %}
+            <tr>
+                <td><input type="checkbox" class="asin-checkbox" data-name="{{ asin }}"></td>
+                <td>{{ asin }}</td>
+                <td><a href="https://www.amazon.com/dp/{{ asin }}" target="_blank">🔗</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <label for="delimiter">選擇分隔符號：</label>
+    <select id="delimiter">
+        <option value="\n">換行</option>
+        <option value="\t">Tab</option>
+    </select>
+
+    <button onclick="copySelected()">複製選取的 ASIN</button>
+    {% endif %}
+
+    <script>
+        function copySelected() {
+            let checkboxes = document.querySelectorAll(".asin-checkbox:checked");
+            let delimiter = document.getElementById("delimiter").value;
+            let selectedNames = Array.from(checkboxes).map(cb => cb.dataset.name).join(delimiter);
+
+            if (selectedNames) {
+                navigator.clipboard.writeText(selectedNames).then(() => {
+                    alert("已複製:\n" + selectedNames);
+                });
+            } else {
+                alert("請至少選擇一個 ASIN！");
+            }
+        }
+    </script>
+
+</body>
+</html>
